@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search User</title>
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        .disp{
+            display: flex;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <!-- Search Box -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <input
+            type="text"
+            id="user-id"
+            class="form-control"
+            placeholder="Enter city"
+          />
+        </div>
+        <div class="col-md-6">
+          <button id="search-btn" class="btn btn-primary">Search City</button>
+        </div>
+      </div>
+
+     <div class="disp row">
+        <div id="temp" class="">
+            <!-- User Card -->
+          </div>
+          <div id="humidity" class=""></div>
+            <!-- User Card -->
+          </div>
+          <div id="aqi" class=""></div>
+            <!-- User Card -->
+          </div>
+     </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("search-btn")
+        .addEventListener("click", function () {
+          const userId = document.getElementById("user-id").value;
+
+          const url = `https://the-weather-api.p.rapidapi.com/api/weather/${userId}`;
+          const options = {
+            method: "GET",
+            headers: {
+              "x-rapidapi-key":
+                "c02a07540amshb5c94e0252765f5p1bd8c4jsna31f5f0cb30e",
+              "x-rapidapi-host": "the-weather-api.p.rapidapi.com",
+            },
+          };
+
+          fetch(url, options)
+            .then((response) => response.json())
+            .then((data1) => {
+              // Clear the previous card
+
+              const tempCard = document.getElementById("temp");
+              tempCard.innerHTML = "";
+
+              if (data1.success == true) {
+                console.log(data1);
+                
+
+                const user = data1.data;
+                // Generate the user card
+                const userCard = `
+              <div class="col-md-6 mb-4">
+                <div class="card mb-3">
+                  
+                  <div class="card-body">
+                    <h5 class="card-title">Temperature</h5>
+                    <p class="card-text"><small>TEMPERATURE:</small> ${user.temp}</p>
+                    <p class="card-text"><small class="text-body-secondary">: ${user.expected_temp}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">: ${user.current_weather}</small></p>
+                  </div>
+                </div>
+              </div>
+            `;
+                tempCard.innerHTML += userCard;
+
+
+                const humidityCard = document.getElementById("humidity");
+                humidityCard.innerHTML = "";
+
+                
+                // Generate the user card
+                const userCard1 = `
+              <div class="col-md-6 mb-4">
+                <div class="card mb-3">
+                  
+                  <div class="card-body">
+                    <h5 class="card-title">HUMIDITY </h5>
+                    <p class="card-text"><strong>Temperature:</strong> ${user.humidity}</p>
+                    <p class="card-text"><small class="text-body-secondary">Visibility: ${user.visibility}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">${user.insight_heading}: ${user.insight_description}</small></p>
+                  </div>
+                </div>
+              </div>
+            `;
+                humidityCard.innerHTML += userCard1;
+
+
+
+
+
+
+
+                const aqiCard = document.getElementById("aqi");
+                aqiCard.innerHTML = "";
+
+                
+                // Generate the user card
+                const userCard2 = `
+              <div class="col-md-6 mb-4">
+                <div class="card mb-3">
+                  
+                  <div class="card-body">
+                    <h5 class="card-title">AQI and WIND </h5>
+                    <p class="card-text"><strong>AQI:</strong> ${user.aqi}</p>
+                    <p class="card-text"><small class="text-body-secondary">AQI Remark:${user.aqi_remark}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">AQI Description: ${user.aqi_description}</small></p>
+                     <p class="card-text"><small class="text-body-secondary">Wind: ${user.wind}</small></p>
+                  </div>
+                </div>
+              </div>
+            `;
+                aqiCard.innerHTML += userCard2;
+
+
+
+
+              } else {
+                // Display error message if user not found
+                tempCard.innerHTML = `
+              <div class="col-md-12">
+                <div class="alert alert-danger">CITY= ${userId} not found </div>
+              </div>
+            `;
+              }
+            });
+        });
+    </script>
+  </body>
+</html>

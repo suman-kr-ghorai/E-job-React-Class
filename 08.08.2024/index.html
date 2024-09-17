@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+    <style>
+        .t1{
+            width: 50%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th{
+            background-color: rgb(143, 140, 140);
+        }
+        .t2{
+            width: 200px;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+
+
+<div>
+<table class="t1">
+    <th>SL NO</th>
+        <th>Fist Name</th>
+        <th>Last Name</th>
+        <th>Marks</th>
+    
+    <tr>
+        <td>1</td>
+        <td>sonoo</td>
+        <td>Jaiswal</td>
+        <td>70</td>
+    </tr>
+    
+    <tr>
+        <td>2</td>
+        <td>rajiv</td>
+        <td>bh</td>
+        <td>60</td>  
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>rohan</td>
+        <td>das</td>
+        <td>80</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>hites</td>
+        <td>kr</td>
+        <td>90</td>
+    </tr>
+</table>
+</div>
+
+
+
+<br><br>
+
+<div>
+<table class="t2">
+    <!-- 1 -->
+   <tr>
+    <td rowspan="3"></td>
+    <td colspan="5"></td>
+   </tr>
+
+<!-- 2 -->
+   <tr>
+    <td colspan="2"></td>
+    <td colspan="3"></td>
+   </tr>
+
+
+<!-- 3   <tr> -->
+    <td colspan="2"></td>
+    <td rowspan="" colspan="3"></td>   
+   </tr>
+
+<!-- //4 -->
+   <tr>
+    <td rowspan="2"></td>
+    <td rowspan="2"></td>
+    <td rowspan="2"></td>
+    <td></td>
+   </tr>
+<!-- //5 -->
+   <tr>
+    <td colspan="3"></td>
+    
+   </tr>
+
+<!-- //6 -->
+   <tr>
+    <td rowspan="3"></td>
+    <td colspan="2"></td>
+    <td colspan=""></td>
+    
+   </tr>
+<!-- //7 -->
+
+    <tr>
+    <td colspan="2"></td>
+    <td colspan="" rowspan=""></td>
+    
+   </tr>
+
+<!-- //8 -->
+    <tr>
+    <td colspan="2"></td>
+    <td colspan="" rowspan=""></td>
+   </tr>
+  <!-- //9  -->
+   <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+   </tr>
+   
+</table>
+</div>
+</body>
+</html>

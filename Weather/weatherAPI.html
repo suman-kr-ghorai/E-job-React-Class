@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Spot</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #f4f7f9;
+        font-family: 'Arial', sans-serif;
+      }
+
+      .container {
+        margin-top: 50px;
+      }
+
+      .header-text {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #444;
+      }
+
+      .weather-cards {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+      }
+
+      .card {
+        background-color: #fff;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .card h5 {
+        margin-bottom: 15px;
+        font-size: 1.25rem;
+      }
+
+      .card p {
+        font-size: 1rem;
+        color: #666;
+      }
+
+      .search-box {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+
+      .search-box input {
+        margin-right: 10px;
+      }
+
+      .loading {
+        text-align: center;
+        display: none;
+      }
+
+      .footer-text {
+        text-align: center;
+        margin-top: 30px;
+        color: #888;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="header-text">Weather Spot</h2>
+
+      <!-- Search Box -->
+      <div class="search-box mb-4">
+        <input
+          type="text"
+          id="user-id"
+          class="form-control col-md-4"
+          placeholder="Enter city name..."
+        />
+        <button id="search-btn" class="btn btn-primary">Search City</button>
+      </div>
+
+      <div class="loading" id="loading">Fetching weather data...</div>
+
+      <div class="name">
+
+      </div>
+      <!-- Weather Cards -->
+      <div class="weather-cards row">
+        <div class="col-md-4" id="temp">
+          <!-- Temperature Card -->
+        </div>
+        <div class="col-md-4" id="humidity">
+          <!-- Humidity Card -->
+        </div>
+        <div class="col-md-4" id="aqi">
+          <!-- AQI and Wind Card -->
+        </div>
+      </div>
+
+      <div class="footer-text">
+        <p>&copy; 2024 Weather Spot | Powered by WeatherAPI</p>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and Fetch -->
+    <script>
+      // Function to fetch weather for a given city
+      function fetchWeather(city) {
+        const url = `https://the-weather-api.p.rapidapi.com/api/weather/${city}`;
+        const options = {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "8f31554a44msh1fa222bcc79f991p186742jsn6e84b2c75df4",
+            "x-rapidapi-host": "the-weather-api.p.rapidapi.com",
+          },
+        };
+
+        // Show loading indicator
+        const loading = document.getElementById("loading");
+        loading.style.display = "block";
+
+        fetch(url, options)
+          .then((response) => response.json())
+          .then((data1) => {
+            // Hide loading indicator
+            loading.style.display = "none";
+
+            const tempCard = document.getElementById("temp");
+            const humidityCard = document.getElementById("humidity");
+            const aqiCard = document.getElementById("aqi");
+             
+           
+            // Clear previous data
+            tempCard.innerHTML = "";
+            humidityCard.innerHTML = "";
+            aqiCard.innerHTML = "";
+
+
+            if (data1.success == true) {
+              const user = data1.data;
+              const name=document.getElementById("name");
+               name.innerHTML=`<h3>${user.city}</h3>`
+              
+
+              // Temperature Card
+              const tempCardContent = `
+                <div class="card">
+                  <h5 class="card-title">Temperature</h5>
+                  <p><strong>Current:</strong> ${user.temp}°C</p>
+                  <p><strong>Expected:</strong> ${user.expected_temp}</p>
+                  <p><strong>Weather:</strong> ${user.current_weather}</p>
+                </div>`;
+              tempCard.innerHTML += tempCardContent;
+
+              // Humidity Card
+              const humidityCardContent = `
+                <div class="card">
+                  <h5 class="card-title">Humidity</h5>
+                  <p><strong>Humidity:</strong> ${user.humidity}%</p>
+                  <p><strong>Visibility:</strong> ${user.visibility} km</p>
+                  <p><strong>${user.insight_heading}:</strong> ${user.insight_description}</p>
+                </div>`;
+              humidityCard.innerHTML += humidityCardContent;
+
+              // AQI and Wind Card
+              const aqiCardContent = `
+                <div class="card">
+                  <h5 class="card-title">Air Quality & Wind</h5>
+                  <p><strong>AQI:</strong> ${user.aqi} (${user.aqi_remark})</p>
+                  <p><strong>Description:</strong> ${user.aqi_description}</p>
+                  <p><strong>Wind:</strong> ${user.wind}</p>
+                </div>`;
+              aqiCard.innerHTML += aqiCardContent;
+            } else {
+              tempCard.innerHTML = `
+                <div class="alert alert-danger">City ${city} not found.</div>
+              `;
+            }
+          })
+          .catch((error) => {
+            // Hide loading indicator
+            loading.style.display = "none";
+
+            console.error("Error fetching data:", error);
+            const tempCard = document.getElementById("temp");
+            tempCard.innerHTML = `
+              <div class="alert alert-danger">An error occurred. Please try again later.</div>
+            `;
+          });
+      }
+
+      // Fetch weather for Kolkata by default on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchWeather("kolkata");
+      });
+
+      // Add event listener for search button
+      document.getElementById("search-btn").addEventListener("click", function () {
+        const city = document.getElementById("user-id").value;
+        fetchWeather(city);
+      });
+    </script>
+  </body>
+</html>

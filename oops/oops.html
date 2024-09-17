@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> </head>
+  <body>
+
+
+    <table class="table table-hover table-bordered">
+        <th>Name</th>
+        <th>Age</th>
+        <th>Location</th>
+        <th>Qualification</th>
+        <th>zip</th>
+        <tbody id="alldata"></tbody>
+    </table>
+    <script>
+      //Take a class name as students
+      //datamembers:name,age=>1st
+      //datamembers:add,qualification=>2nd
+      //datamember:loc,zip =>3rd class
+      //Create a show fucntion whats are return a array of object
+      //create 5 object name as students
+
+
+      class Students {
+        name = "";
+        age = 0;
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+      }
+      class qualification extends Students {
+        add = "";
+        Qualification = "";
+        constructor(name, age, add, Qualification) {
+          super(name, age);
+          this.Qualification = Qualification;
+          this.add = add;
+        }
+      }
+      class Location extends qualification {
+        loc = "";
+        zip = "";
+        constructor(name, age, add, Qualification, loc, zip) {
+          super(name, age, add, Qualification);
+          this.loc = loc;
+          this.zip = zip;
+        }
+        show() {
+          return {
+            name:this.name,
+            age:this.age,
+            add:this.add,
+            Qualification:this.Qualification,
+            loc:this.loc,
+            zip:this.zip
+
+          };
+        }
+      }
+
+      let stud1 = new Location("Suman", 20, "Haldia", "B.Tech", "W.B", "721602");
+      
+      let stud2 = new Location("sampad", 23, "Kol", "B.Tech", "W.B", "700102");
+     
+      let stud3 = new Location("Rohan", 24, "Salt lake", "B.Tech", "W.B", "755602");
+      
+      let stud4 = new Location("Sayan", 22, "Dubai", "B.Tech", "W.B", "556202");
+      
+      let stud5 = new Location("niladri", 21, "jadavpur", "B.Tech", "W.B", "775602");
+    
+      let user=[
+      stud1.show(),
+      stud2.show(),
+      stud3.show(),
+      stud4.show(),
+      stud5.show()
+
+      ]
+      console.log(user);
+      var tbody = document.getElementById('alldata')
+        var res = '';
+        user.map((item) => {
+            res += `<tr>
+                <td>${item.name}</td>
+                 <td>${item.age}</td>
+                  <td>${item.add}</td>
+                  <td>${item.Qualification}</td>
+                  <td>${item.zip}</td>
+               
+               
+               
+                </tr>`
+
+        })
+        tbody.innerHTML=res;
+      
+    </script>
+  </body>
+</html>

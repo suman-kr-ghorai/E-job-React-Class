@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Cards</title>
+ 
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row" id="user-cards">
+      <!-- for cards -->
+    </div>
+  </div>
+
+ 
+
+
+  <script>
+    fetch('https://www.melivecode.com/api/users')
+      .then(response => {
+        return response.json();
+      })
+      .then(users => {
+        const user_Cards = document.getElementById('user-cards');
+        users.forEach(user => {
+          const userCard = `
+            <div >
+              <div class="card ">
+                <img src="${user.avatar}" class="card-img-top" alt="${user.fname} ${user.lname}">
+                <div class="card-body">
+                  <h5 class="card-title">${user.fname} ${user.lname}</h5>
+                  <p class="card-text"><strong>Email/Username:</strong> ${user.username}</p>
+                  <p class="card-text"><small class="text-body-secondary">ID: ${user.id}</small></p>
+                </div>
+              </div>
+            </div>
+            
+          `;
+          user_Cards.innerHTML += userCard;
+        });
+      })
+      
+  </script>
+
+</body>
+</html>

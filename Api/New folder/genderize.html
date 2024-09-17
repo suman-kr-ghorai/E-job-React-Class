@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>|Gender Predict app|</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h4>|Gender Predict App |</h4>
+      </header>
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" id="n1" name="name" class="form-control" />
+      </div>
+      <button class="btn btn-sm btn-success" onclick="getGender()">
+        Predict
+      </button>
+      <br>
+      <br>
+
+     
+    </div>
+    <div id="res"></div>
+ 
+   
+    </div>
+    <script type="text/javascript">
+        function getGender() {
+          //console.log("Gender...call");
+          let name = document.getElementById("n1").value;
+          /**Back-end api call*/
+          let _url = "https://api.genderize.io/?";
+          fetch(`${_url}name=${name}`)
+            .then((res) => res.json())
+            .then((result) => {
+              if(result.gender){
+                setTimeout(()=>{
+                 //console.log('Set time out fn');
+              
+            let content =
+            `   <div class="container">
+                <div class="alert alert-success">
+                <h4>Hy..  ${name} </h4>
+                <h4>Your Gender : ${result.gender.toUpperCase()} </h4>
+                </div>
+           `;
+  
+              /** id=res  content*/
+              document.getElementById('res').innerHTML=content;
+  
+  
+  
+              },1000*5)
+             /**Loader */
+  
+            document.getElementById('res').innerHTML=`
+            <div  class="alert alert-primary">
+            <img src="./loader/Ghost.gif" alt="" srcset="">
+            <p >Please wait while your gender will predict .....!</p>
+            </div>
+            `;
+               }
+               
+            else{
+                document.getElementById('res').innerHTML=`
+              <p class="alert alert-danger">Something went wrong....!</p>
+              
+              `;
+               }
+  
+              
+    
+            })
+            .catch((err) => {
+              console.log(err);
+              document.getElementById('res').innerHTML=`
+              <p class="alert alert-danger">Something went wrong....!</p>
+              
+              `;
+            });
+        }
+      </script>
+  </body>
+</html>

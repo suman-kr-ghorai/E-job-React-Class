@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        .btn{
+            padding: 20px;
+            font-weight:bolder;
+            background-color: rgb(212, 222, 231);
+        }
+        .result{
+
+            color: green;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    Num1<input id="n1" type="number" required>
+    <br><br>
+    Num2<input id="n2" type="number" required><br>
+    <br>
+
+    <div class="act" >
+    +<input type="radio" name="calc"  class="btn" onclick="add()">
+    -<input type="radio" name="calc" class="btn"  onclick="sub()" >
+    *<input type="radio" name="calc" class="btn"  onclick="mul()">
+    /<input type="radio" name="calc" class="btn"  onclick="div()">
+
+    </div>
+    </div>
+    <div class="result">
+
+    </div>
+
+    <script>
+        function add(){
+            let n1=parseInt(document.getElementById("n1").value);
+            let n2=parseInt(document.getElementById("n2").value);
+            let add=(n1+n2)
+            let res=document.querySelector(".result")
+            if(add>0){
+                res.innerHTML=`<h1>${n1}+${n2}=${add}</h1>`}
+
+        }
+        function div(){
+            let n1=document.getElementById("n1").value;
+            let n2=document.getElementById("n2").value;
+            let add=n1/n2
+            let res=document.querySelector(".result")
+            if(add>0){res.innerHTML=`<h1>${n1}/${n2}=${add}</h1>`}
+
+        }
+        function mul(){
+            let n1=document.getElementById("n1").value;
+            let n2=document.getElementById("n2").value;
+            let add=n1*n2
+            let res=document.querySelector(".result")
+            if(add>0){res.innerHTML=`<h1>${n1}*${n2}=${add}</h1>`
+            }
+        }
+        function sub(){
+            let n1=document.getElementById("n1").value;
+            let n2=document.getElementById("n2").value;
+            let add=n1-n2
+            let res=document.querySelector(".result")
+            if(add){res.innerHTML=`<h1>${n1}-${n2}=${add}</h1>`
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        /* Button styling */
+        .btn {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody id="alldata"></tbody>
+    </table>
+
+    <!-- Modal Structure -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalName"></h2>
+            <p id="modalEmail"></p>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Deleted User Details</h2>
+            <p id="deletedId"></p>
+            <p id="deletedName"></p>
+            <p id="deletedEmail"></p>
+        </div>
+    </div>
+
+    <script>
+        let res=[
+        {
+          "postId": 1,
+          "id": 1,
+          "name": "id labore ex et quam laborum",
+          "email": "Eliseo@gardner.biz",
+          "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+        },
+        {
+          "postId": 1,
+          "id": 2,
+          "name": "quo vero reiciendis velit similique earum",
+          "email": "Jayne_Kuhic@sydney.com",
+          "body": "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et"
+        },
+        {
+          "postId": 1,
+          "id": 3,
+          "name": "odio adipisci rerum aut animi",
+          "email": "Nikita@garfield.biz",
+          "body": "quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione"
+        },
+        {
+          "postId": 1,
+          "id": 4,
+          "name": "alias odio sit",
+          "email": "Lew@alysha.tv",
+          "body": "non et atque\noccaecati deserunt quas accusantium unde odit nobis qui voluptatem\nquia voluptas consequuntur itaque dolor\net qui rerum deleniti ut occaecati"
+        },
+        {
+          "postId": 1,
+          "id": 5,
+          "name": "vero eaque aliquid doloribus et culpa",
+          "email": "Hayden@althea.biz",
+          "body": "harum non quasi et ratione\ntempore iure ex voluptates in ratione\nharum architecto fugit inventore cupiditate\nvoluptates magni quo et"
+        },
+        {
+          "postId": 2,
+          "id": 6,
+          "name": "et fugit eligendi deleniti quidem qui sint nihil autem",
+          "email": "Presley.Mueller@myrl.com",
+          "body": "doloribus at sed quis culpa deserunt consectetur qui praesentium\naccusamus fugiat dicta\nvoluptatem rerum ut voluptate autem\nvoluptatem repellendus aspernatur dolorem in"
+        },
+        {
+          "postId": 2,
+          "id": 7,
+          "name": "repellat consequatur praesentium vel minus molestias voluptatum",
+          "email": "Dallas@ole.me",
+          "body": "maiores sed dolores similique labore et inventore et\nquasi temporibus esse sunt id et\neos voluptatem aliquam\naliquid ratione corporis molestiae mollitia quia et magnam dolor"
+        },
+        {
+          "postId": 2,
+          "id": 8,
+          "name": "et omnis dolorem",
+          "email": "Mallory_Kunze@marie.org",
+          "body": "ut voluptatem corrupti velit\nad voluptatem maiores\net nisi velit vero accusamus maiores\nvoluptates quia aliquid ullam eaque"
+        },
+        {
+          "postId": 2,
+          "id": 9,
+          "name": "provident id voluptas",
+          "email": "Meghan_Littel@rene.us",
+          "body": "sapiente assumenda molestiae atque\nadipisci laborum distinctio aperiam et ab ut omnis\net occaecati aspernatur odit sit rem expedita\nquas enim ipsam minus"
+        },
+        {
+          "postId": 2,
+          "id": 10,
+          "name": "eaque et deleniti atque tenetur ut quo ut",
+          "email": "Carmen_Keeling@caroline.name",
+          "body": "voluptate iusto quis nobis reprehenderit ipsum amet nulla\nquia quas dolores velit et non\naut quia necessitatibus\nnostrum quaerat nulla et accusamus nisi facilis"
+        },
+        {
+          "postId": 3,
+          "id": 11,
+          "name": "fugit labore quia mollitia quas deserunt nostrum sunt",
+          "email": "Veronica_Goodwin@timmothy.net",
+          "body": "ut dolorum nostrum id quia aut est\nfuga est inventore vel eligendi explicabo quis consectetur\naut occaecati repellat id natus quo est\nut blanditiis quia ut vel ut maiores ea"
+        },
+        {
+          "postId": 3,
+          "id": 12,
+          "name": "modi ut eos dolores illum nam dolor",
+          "email": "Oswald.Vandervort@leanne.org",
+          "body": "expedita maiores dignissimos facilis\nipsum est rem est fugit velit sequi\neum odio dolores dolor totam\noccaecati ratione eius rem velit"
+        },
+        {
+          "postId": 3,
+          "id": 13,
+          "name": "aut inventore non pariatur sit vitae voluptatem sapiente",
+          "email": "Kariane@jadyn.tv",
+          "body": "fuga eos qui dolor rerum\ninventore corporis exercitationem\ncorporis cupiditate et deserunt recusandae est sed quis culpa\neum maiores corporis et"
+        },
+        {
+          "postId": 3,
+          "id": 14,
+          "name": "et officiis id praesentium hic aut ipsa dolorem repudiandae",
+          "email": "Nathan@solon.io",
+          "body": "vel quae voluptas qui exercitationem\nvoluptatibus unde sed\nminima et qui ipsam aspernatur\nexpedita magnam laudantium et et quaerat ut qui dolorum"
+        },
+        {
+          "postId": 3,
+          "id": 15,
+          "name": "debitis magnam hic odit aut ullam nostrum tenetur",
+          "email": "Maynard.Hodkiewicz@roberta.com",
+          "body": "nihil ut voluptates blanditiis autem odio dicta rerum\nquisquam saepe et est\nsunt quasi nemo laudantium deserunt\nmolestias tempora quo quia"
+        }]
+
+        var data = '';
+        var alldata = document.getElementById('alldata');
+        
+        res.map((item) => {
+            const { id, name, email } = item;
+            data += `<tr>
+                        <td>${id}</td>
+                        <td>${name}</td>
+                        <td>${email}</td>
+                        <td><button class='btn' onclick="showDetails('${name}', '${email}')">View</button>
+                    <button class='btn btn-delete' onclick="deleteItem(${id}, '${name}', '${email}')">Delete</button></td>
+                            
+                        </tr>`;
+        });
+        
+        alldata.innerHTML = data;
+
+        function showDetails(name, email) {
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalEmail').innerText = email;
+            document.getElementById('viewModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('viewModal').style.display = "none";
+            document.getElementById('deleteModal').style.display = "none";
+        }
+        function deleteItem(id, name, email) {
+            // Show delete modal with details
+            document.getElementById('deletedId').innerText = `ID: ${id}`;
+            document.getElementById('deletedName').innerText = `Name: ${name}`;
+            document.getElementById('deletedEmail').innerText = `Email: ${email}`;
+            document.getElementById('deleteModal').style.display = "block";
+            
+            // Remove the item from the res array
+            res = res.filter(item => item.id !== id);
+
+            // Remove the row from the table
+            document.getElementById(`row-${id}`).remove();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('viewModal')) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+</html>

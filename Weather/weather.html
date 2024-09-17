@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search User</title>
+ 
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <!-- <div class="container"> -->
+        <header class="navbar bg-body-tertiary">
+          <h4>Weather App </h4>
+        </header><br>
+    <!-- Search Box -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <input type="text" id="city" class="form-control" placeholder="Enter any city">
+      </div>
+      <div class="col-md-6">
+        <button id="search-btn" class="btn btn-primary">Search City</button>
+      </div>
+    </div>
+
+    
+    <div id="Weather" class="row">
+     <!-- User Card -->
+    </div>
+    <div id="humidity" class="row">
+        <!-- User Card -->
+       </div>
+  </div>
+
+
+  <script>
+    document.getElementById('search-btn').addEventListener('click', function() {
+      const city = document.getElementById('city').value;
+
+      
+      fetch(`https://weather-api-by-any-city.p.rapidapi.com/weather/${city}`)
+        .then(response => response.json())
+        .then(data => {
+          // Clear the previous card
+          console.log(data);
+          
+          const weather= document.getElementById('Weather');
+          weather.innerHTML = '';
+            let 
+          if (data.sucess === 'true') {
+            const user = data.data;
+            // Generate the user card
+            const userCard = `
+              <div class="col-md-6 mb-4">
+                <div class="card mb-3">
+                  <img src="${user.bg_image}" class="card-img-top" alt="">
+                  <div class="card-body">
+                    <h5 class="card-title">${user.city}</h5>
+                    <p class="card-text"><strong>Temp:</strong> ${user.temp}</p>
+                    <p class="card-text"><strong>AQI:</strong> ${user.aqi}</p>
+                    <p class="card-text"><small class="text-body-secondary">Current Weather: ${user.current_weather}</small></p>
+                  </div>
+                </div>
+              </div>
+            `;
+            weather.innerHTML += userCard;
+            }
+
+            const humidity= document.getElementById('humidity');
+          humidity.innerHTML = '';
+            let 
+          if (data.sucess === 'true') {
+            const user = data.data;
+            // Generate the user card
+            const humidityCard = `
+              <div class="col-md-6 mb-4">
+                <div class="card mb-3">
+                  <img src="${user.bg_image}" class="card-img-top" alt="">
+                  <div class="card-body">
+                    <h5 class="card-title">${user.humidity}</h5>
+                    <p class="card-text"><strong>Temp:</strong> ${user.temp}</p>
+                    <p class="card-text"><strong>Insight description:</strong> ${user.insight_description}</p>
+                    <p class="card-text"><small class="text-body-secondary">AQI REmark: ${user.aqi_remark}</small></p>
+                  </div>
+                </div>
+              </div>
+            `;
+            humidity.innerHTML += humidityCard;
+
+
+          } else {
+            // Display error message if user not found
+            weather.innerHTML = `
+              <div class="col-md-12">
+                <div class="alert alert-danger">City = ${userId} not found</div>
+              </div>
+            `;
+          }
+        });
+  </script>
+
+ 
+  </body>
+</html>
