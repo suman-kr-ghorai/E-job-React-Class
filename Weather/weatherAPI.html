@@ -77,7 +77,7 @@
   </head>
   <body>
     <div class="container">
-      <h2 class="header-text">Weather Spot</h2>
+      <h2 class="header-text">Weather Around</h2>
 
       <!-- Search Box -->
       <div class="search-box mb-4">
@@ -92,7 +92,7 @@
 
       <div class="loading" id="loading">Fetching weather data...</div>
 
-      <div class="name">
+      <div id="name">
 
       </div>
       <!-- Weather Cards -->
@@ -117,24 +117,23 @@
     <script>
       // Function to fetch weather for a given city
       function fetchWeather(city) {
-        const url = `https://the-weather-api.p.rapidapi.com/api/weather/${city}`;
-        const options = {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key":
-              "8f31554a44msh1fa222bcc79f991p186742jsn6e84b2c75df4",
-            "x-rapidapi-host": "the-weather-api.p.rapidapi.com",
-          },
-        };
+        const url = `http://api.weatherapi.com/v1/current.json?key=16703224c0684fbba24163054241709&q=${city}&aqi=yes`;
+       // console.log(city);
+        
+        // const options = {
+        //   method: "GET"
+        // };
 
         // Show loading indicator
         const loading = document.getElementById("loading");
         loading.style.display = "block";
 
-        fetch(url, options)
+        fetch(url)
           .then((response) => response.json())
-          .then((data1) => {
+          .then((data) => {
             // Hide loading indicator
+            console.log(data);
+            
             loading.style.display = "none";
 
             const tempCard = document.getElementById("temp");
@@ -148,40 +147,51 @@
             aqiCard.innerHTML = "";
 
 
-            if (data1.success == true) {
-              const user = data1.data;
+            if (data) {
+              const weatherdetails = data.current;
+              console.log(weatherdetails);
+              const airquality=weatherdetails.air_quality;
+              console.log(airquality);
+              
+              
+
+              
               const name=document.getElementById("name");
-               name.innerHTML=`<h3>${user.city}</h3>`
+               name.innerHTML=`<h3>${city}</h3>`
               
 
               // Temperature Card
               const tempCardContent = `
                 <div class="card">
                   <h5 class="card-title">Temperature</h5>
-                  <p><strong>Current:</strong> ${user.temp}°C</p>
-                  <p><strong>Expected:</strong> ${user.expected_temp}</p>
-                  <p><strong>Weather:</strong> ${user.current_weather}</p>
+                  <p><strong>Current temp:</strong> ${weatherdetails.temp_c}°C or ${weatherdetails.temp_f}°F</p>
+                  <p><strong>Feels like:</strong>${weatherdetails.feelslike_c}°C</p>
+                  <p><strong>Pressure:</strong> ${weatherdetails.pressure_mb}MB</p>
                 </div>`;
               tempCard.innerHTML += tempCardContent;
 
               // Humidity Card
               const humidityCardContent = `
                 <div class="card">
-                  <h5 class="card-title">Humidity</h5>
-                  <p><strong>Humidity:</strong> ${user.humidity}%</p>
-                  <p><strong>Visibility:</strong> ${user.visibility} km</p>
-                  <p><strong>${user.insight_heading}:</strong> ${user.insight_description}</p>
+                  <h5 class="card-title">Wind And Precipitation</h5>
+                  <p><strong>WindDirection:</strong> ${weatherdetails.wind_dir}</p>
+                  <p><strong>Wind speed:</strong> ${weatherdetails.wind_kph}kmph or ${weatherdetails.wind_mph}mph</p>
+                  <p><strong>Humidity:</strong> ${weatherdetails.humidity}%</p>
                 </div>`;
               humidityCard.innerHTML += humidityCardContent;
 
-              // AQI and Wind Card
+              // // AQI and Wind Card
               const aqiCardContent = `
                 <div class="card">
-                  <h5 class="card-title">Air Quality & Wind</h5>
-                  <p><strong>AQI:</strong> ${user.aqi} (${user.aqi_remark})</p>
-                  <p><strong>Description:</strong> ${user.aqi_description}</p>
-                  <p><strong>Wind:</strong> ${user.wind}</p>
-                </div>`;
+                  <h5 class="card-title">Air Quality</h5>
+                  <p><strong>PM10:</strong> ${weatherdetails.air_quality.pm10}</p>
+                  <p><strong>PM2.5:</strong> ${weatherdetails.air_quality.pm2_5}</p>
+                  <p><strong>CO:</strong> ${weatherdetails.air_quality.co}</p>
+                
+                <p><strong>SO2:</strong> ${weatherdetails.air_quality.so2}</p>
+                <p><strong>O3:</strong> ${weatherdetails.air_quality.o3}</p>
+                </div>
+                `;
               aqiCard.innerHTML += aqiCardContent;
             } else {
               tempCard.innerHTML = `
@@ -203,7 +213,7 @@
 
       // Fetch weather for Kolkata by default on page load
       document.addEventListener("DOMContentLoaded", function () {
-        fetchWeather("kolkata");
+        fetchWeather("Kolkata");
       });
 
       // Add event listener for search button
