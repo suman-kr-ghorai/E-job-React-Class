@@ -1,226 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Spot</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Spot</title>
 
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+  <!-- Bootstrap 5 -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
 
-    <style>
-      body {
-        background-color: #f4f7f9;
-        font-family: 'Arial', sans-serif;
+  <!-- Font Awesome for Icons -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+
+    .container {
+      margin-top: 50px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-text {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #333;
+      font-weight: bold;
+      font-size: 2.5rem;
+    }
+
+    /* Weather Cards Layout */
+    .weather-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .weather-card {
+      flex: 1 1 30%;
+      background-color: #f8f9fa;
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      min-width: 250px;
+    }
+
+    .weather-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .weather-card h5 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      color: #007bff;
+    }
+
+    .weather-card p {
+      font-size: 1rem;
+      color: #555;
+      margin: 5px 0;
+    }
+
+    .search-box {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      gap: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .loading {
+      text-align: center;
+      display: none;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      color: #007bff;
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 40px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Table Styles */
+    .city-table {
+      margin-top: 50px;
+    }
+
+    .city-table th, .city-table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .city-table th {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .weather-icon {
+      font-size: 1.5rem;
+      color: #ff9800;
+      margin-right: 5px;
+    }
+
+    @media (max-width: 992px) {
+      .weather-card {
+        flex: 1 1 45%;
       }
+    }
 
-      .container {
-        margin-top: 50px;
+    @media (max-width: 576px) {
+      .weather-card {
+        flex: 1 1 100%;
       }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="header-text">Weather Spot</h2>
 
-      .header-text {
-        text-align: center;
-        margin-bottom: 40px;
-        color: #444;
-      }
+    <!-- Search Box -->
+    <div class="search-box mb-4">
+      <input
+        type="text"
+        id="user-id"
+        class="form-control"
+        placeholder="Enter city name..."
+      />
+      <button id="search-btn" class="btn btn-primary">Search</button>
+    </div>
 
-      .weather-cards {
-        display: flex;
-        justify-content: space-around;
-        gap: 5px;
-      }
+    <div class="loading" id="loading"><i class="fas fa-spinner fa-spin"></i> Fetching weather data...</div>
 
-      .card {
-        background-color: #fff;
-        border: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        padding: 0px;
-        text-align: center;
-      }
+    <div id="name" class="text-center mb-4"></div>
 
-      .card h5 {
-        margin-bottom: 15px;
-        font-size: 1.25rem;
-      }
-
-      .card p {
-        font-size: 1rem;
-        color: #666;
-      }
-
-      .search-box {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
-      }
-
-      .search-box input {
-        margin-right: 10px;
-      }
-
-      .loading {
-        text-align: center;
-        display: none;
-      }
-
-      .footer-text {
-        text-align: center;
-        margin-top: 30px;
-        color: #888;
-        font-size: 0.9rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h2 class="header-text">Weather Around</h2>
-
-      <!-- Search Box -->
-      <div class="search-box mb-4">
-        <input
-          type="text"
-          id="user-id"
-          class="form-control col-md-4"
-          placeholder="Enter city name..."
-        />
-        <button id="search-btn" class="btn btn-primary">Search City</button>
+    <!-- Weather Cards -->
+    <div class="weather-cards">
+      <div class="weather-card" id="temp">
+        <!-- Temperature Card -->
       </div>
-
-      <div class="loading" id="loading">Fetching weather data...</div>
-
-      <div id="name">
-
+      <div class="weather-card" id="humidity">
+        <!-- Humidity Card -->
       </div>
-      <!-- Weather Cards -->
-      <div class="weather-cards row">
-        <div class="col-md-4" id="temp">
-          <!-- Temperature Card -->
-        </div>
-        <div class="col-md-4" id="humidity">
-          <!-- Humidity Card -->
-        </div>
-        <div class="col-md-4" id="aqi">
-          <!-- AQI and Wind Card -->
-        </div>
-      </div>
-
-      <div class="footer-text">
-        <p>&copy; 2024 Weather Spot | Powered by WeatherAPI</p>
+      <div class="weather-card" id="aqi">
+        <!-- AQI and Wind Card -->
       </div>
     </div>
 
-    <!-- Bootstrap JS and Fetch -->
-    <script>
-      // Function to fetch weather for a given city
-      function fetchWeather(city) {
-        const url = `http://api.weatherapi.com/v1/current.json?key=16703224c0684fbba24163054241709&q=${city}&aqi=yes`;
-       // console.log(city);
+    <!-- City Temperature Table -->
+    <div class="city-table">
+      <h3 class="text-center mb-4">Current Temperatures in Major Indian Cities</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>City</th>
+            <th>Temperature (°C)</th>
+            <th>Condition</th>
+          </tr>
+        </thead>
+        <tbody id="city-table-body">
+          <!-- Rows -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-text">
+      <p>&copy; 2024 Weather Spot | Powered by WeatherAPI</p>
+    </div>
+  </div>
+
+
+ 
+  <script>
+    const apiKey = '16703224c0684fbba24163054241709';
+
+    // Function to fetch weather for a given city
+    async function fetchWeather(city) {
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+      // Show loading indicator
+      const loading = document.getElementById("loading");
+      loading.style.display = "block";
+
+      try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error('City not found');
+        }
+
         
-        // const options = {
-        //   method: "GET"
-        // };
+        const data = await response.json();
+        console.log(data);
+        loading.style.display = "none";
 
-        // Show loading indicator
-        const loading = document.getElementById("loading");
-        loading.style.display = "block";
+        const weatherDetails = data.current;
+        const cityName = data.location.name;
+        const tempCard = document.getElementById("temp");
+        const humidityCard = document.getElementById("humidity");
+        const aqiCard = document.getElementById("aqi");
+        const nameDiv = document.getElementById("name");
 
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            // Hide loading indicator
-            console.log(data);
-            
-            loading.style.display = "none";
+        // Update City Name
+        nameDiv.innerHTML = `<h3><i class="fas fa-map-marker-alt"></i> ${cityName}</h3>`;
 
-            const tempCard = document.getElementById("temp");
-            const humidityCard = document.getElementById("humidity");
-            const aqiCard = document.getElementById("aqi");
-             
-           
-            // Clear previous data
-            tempCard.innerHTML = "";
-            humidityCard.innerHTML = "";
-            aqiCard.innerHTML = "";
+        // Temperature Card
+        tempCard.innerHTML = `
+          <h5 class="card-title"><i class="fas fa-thermometer-half weather-icon"></i> Temperature</h5>
+          <p><strong>Current:</strong> ${weatherDetails.temp_c}°C / ${weatherDetails.temp_f}°F</p>
+          <p><strong>Feels like:</strong> ${weatherDetails.feelslike_c}°C</p>
+          <p><strong>Pressure:</strong> ${weatherDetails.pressure_mb} MB</p>
+        `;
 
+        // Humidity and Wind Card
+        humidityCard.innerHTML = `
+          <h5 class="card-title"><i class="fas fa-wind weather-icon"></i> Wind & Humidity</h5>
+          <p><strong>Wind Direction:</strong> ${weatherDetails.wind_dir}</p>
+          <p><strong>Wind Speed:</strong> ${weatherDetails.wind_kph} km/h / ${weatherDetails.wind_mph} mph</p>
+          <p><strong>Humidity:</strong> ${weatherDetails.humidity}%</p>
+        `;
 
-            if (data) {
-              const weatherdetails = data.current;
-              console.log(weatherdetails);
-              const airquality=weatherdetails.air_quality;
-              console.log(airquality);
-              
-              
-
-              
-              const name=document.getElementById("name");
-               name.innerHTML=`<h3>${city}</h3>`
-              
-
-              // Temperature Card
-              const tempCardContent = `
-                <div class="card">
-                  <h5 class="card-title">Temperature</h5>
-                  <p><strong>Current temp:</strong> ${weatherdetails.temp_c}°C or ${weatherdetails.temp_f}°F</p>
-                  <p><strong>Feels like:</strong>${weatherdetails.feelslike_c}°C</p>
-                  <p><strong>Pressure:</strong> ${weatherdetails.pressure_mb}MB</p>
-                </div>`;
-              tempCard.innerHTML += tempCardContent;
-
-              // Humidity Card
-              const humidityCardContent = `
-                <div class="card">
-                  <h5 class="card-title">Wind And Precipitation</h5>
-                  <p><strong>WindDirection:</strong> ${weatherdetails.wind_dir}</p>
-                  <p><strong>Wind speed:</strong> ${weatherdetails.wind_kph}kmph or ${weatherdetails.wind_mph}mph</p>
-                  <p><strong>Humidity:</strong> ${weatherdetails.humidity}%</p>
-                </div>`;
-              humidityCard.innerHTML += humidityCardContent;
-
-              // // AQI and Wind Card
-              const aqiCardContent = `
-                <div class="card">
-                  <h5 class="card-title">Air Quality</h5>
-                  <p><strong>PM10:</strong> ${weatherdetails.air_quality.pm10}</p>
-                  <p><strong>PM2.5:</strong> ${weatherdetails.air_quality.pm2_5}</p>
-                  <p><strong>CO:</strong> ${weatherdetails.air_quality.co}</p>
-                
-                <p><strong>SO2:</strong> ${weatherdetails.air_quality.so2}</p>
-                <p><strong>O3:</strong> ${weatherdetails.air_quality.o3}</p>
-                </div>
-                `;
-              aqiCard.innerHTML += aqiCardContent;
-            } else {
-              tempCard.innerHTML = `
-                <div class="alert alert-danger">City ${city} not found.</div>
-              `;
-            }
-          })
-          .catch((error) => {
-            // Hide loading indicator
-            loading.style.display = "none";
-
-            console.error("Error fetching data:", error);
-            const tempCard = document.getElementById("temp");
-            tempCard.innerHTML = `
-              <div class="alert alert-danger">An error occurred. Please try again later.</div>
-            `;
-          });
+        // AQI Card
+        aqiCard.innerHTML = `
+          <h5 class="card-title"><i class="fas fa-smog weather-icon"></i> Air Quality</h5>
+          <p><strong>PM10:</strong> ${weatherDetails.air_quality.pm10}</p>
+          <p><strong>PM2.5:</strong> ${weatherDetails.air_quality.pm2_5}</p>
+          <p><strong>CO:</strong> ${weatherDetails.air_quality.co}</p>
+          <p><strong>SO2:</strong> ${weatherDetails.air_quality.so2}</p>
+          <p><strong>O3:</strong> ${weatherDetails.air_quality.o3}</p>
+        `;
+      } 
+      
+      
+      catch (error) {
+        console.error("Error fetching data:", error);
+        loading.style.display = "none";
+        const tempCard = document.getElementById("temp");
+        tempCard.innerHTML = `
+          <div class="alert alert-danger">An error occurred: ${error.message}</div>
+        `;
+        // Clear other cards
+        document.getElementById("humidity").innerHTML = '';
+        document.getElementById("aqi").innerHTML = '';
+        document.getElementById("name").innerHTML = '';
       }
+    }
 
-      // Fetch weather for Kolkata by default on page load
-      document.addEventListener("DOMContentLoaded", function () {
-        fetchWeather("Kolkata");
-      });
+    // Function to fetch and populate the city temperature table
+    async function populateCityTable() {
+      const cities = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata"];
+      const tableBody = document.getElementById("city-table-body");
 
-      // Add event listener for search button
-      document.getElementById("search-btn").addEventListener("click", function () {
-        const city = document.getElementById("user-id").value;
+      for (const city of cities) {
+        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`;
+        
+        
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error('Error fetching data for ' + city);
+          }
+          const data = await response.json();
+          const tempC = data.current.temp_c;
+          const condition = data.current.condition.text;
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${data.location.name}</td>
+            <td>${tempC}°C</td>
+            <td>${condition}</td>
+          `;
+          tableBody.appendChild(row);
+        }
+        
+        catch (error) {
+          console.error(error);
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${city}</td>
+            <td colspan="2" class="text-danger">Data not available</td>
+          `;
+          tableBody.appendChild(row);
+        }
+      }
+    }
+
+    // Fetch weather for Kolkata by default on page load
+    document.addEventListener("DOMContentLoaded", function () {
+      fetchWeather("Kolkata");
+      populateCityTable();
+    });
+
+    // Add event listener for search button
+    document.getElementById("search-btn").addEventListener("click", function () {
+      const city = document.getElementById("user-id").value.trim();
+      if (city) {
         fetchWeather(city);
-      });
-    </script>
-  </body>
+      }
+    });
+
+    // Allow pressing Enter to search
+    document.getElementById("user-id").addEventListener("keyup", function (event) {
+      if (event.key === "Enter") {
+        document.getElementById("search-btn").click();
+      }
+    });
+  </script>
+</body>
 </html>
