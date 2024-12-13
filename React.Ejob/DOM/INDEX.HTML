@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM</title>
+  </head>
+  <body>
+    <label for="name">Name</label>
+    <input id="name" type="text" />
+    <label for="age">Age</label>
+    <input id="age" type="number" /><br />
+    <label for="gender">Gender:</label>
+    Male<input name="gender" class="g" value="Male" type="radio" /> 
+    Female<input
+      name="gender"
+      class="g"
+      value="Female"
+      type="radio"
+    />
+    <br />
+    <button onclick="show()">Show Details</button>
+    
+      <div id="show"></div>
+    
+  </body>
+  <script>
+    function show() {
+      let name = document.querySelector("#name");
+      let age = document.querySelector("#age");
+      let gender = document.querySelector(".g");
+      let p = document.getElementById("show");
+      p.innerHTML = `<h1>Name:${name.value}<br> Age:${age.value}<br> Gender:${gender.value}<br><h1/>`;
+    }
+  </script>
+</html>
